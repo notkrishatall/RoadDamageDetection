@@ -100,7 +100,8 @@ if uploaded_file and "detections" in locals():
         report["image_name"] = uploaded_file.name
 report["latitude"] = latitude if latitude != 0 else None
 report["longitude"] = longitude if longitude != 0 else None
-        csv_data = report.to_csv(index=False).encode("utf-8")
+        csv_data = 
+report.to_csv(index=False).encode("utf-8")
 
         st.download_button(
             label="Download Detection Report (CSV)",
