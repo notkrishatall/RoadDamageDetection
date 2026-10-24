@@ -9,3 +9,4 @@ matplotlib
 seaborn
 numpy
 ultralytics
+opencv-python-headless
