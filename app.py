@@ -32,7 +32,7 @@ st.subheader("📍 Road Location")
 components.html("""
 <div>
   <button onclick="getLocation()">Get My Live Location</button>
-  <p id="status">Location lene ke liye button dabao.</p>
+  <p id="status">“Click the button to get your location.”.</p>
   <script>
     function getLocation() {
       const status = document.getElementById("status");
