@@ -89,3 +89,22 @@ if uploaded_file:
                     )
                 else:
                     st.info("No damage detected above the confidence threshold.")
+# Save Detection Report
+st.subheader("📋 Detection Report")
+
+if uploaded_file and "detections" in locals():
+    if len(detections) > 0:
+        report = detections.copy()
+        report["date_time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        report["image_name"] = uploaded_file.name
+
+        csv_data = report.to_csv(index=False).encode("utf-8")
+
+        st.download_button(
+            label="Download Detection Report (CSV)",
+            data=csv_data,
+            file_name="road_damage_report.csv",
+            mime="text/csv"
+        )
+    else:
+        st.info("No road damage detected in this image.")
