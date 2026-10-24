@@ -5,6 +5,7 @@ import torch
 import io
 import pandas as pd
 from datetime import datetime
+import streamlit.components.v1 as components
 
 st.set_page_config(
     page_title="Road Damage Detection",
@@ -26,7 +27,38 @@ def load_model():
         force_reload=False,
         trust_repo=True
     )
+st.subheader("📍 Road Location")
 
+components.html("""
+<div>
+  <button onclick="getLocation()">Get My Live Location</button>
+  <p id="status">Location lene ke liye button dabao.</p>
+  <script>
+    function getLocation() {
+      const status = document.getElementById("status");
+      if (!navigator.geolocation) {
+        status.innerText = "Browser location support nahi karta.";
+        return;
+      }
+      status.innerText = "Location permission ka wait ho raha hai...";
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          status.innerHTML =
+            "Latitude: " + lat + "<br>Longitude: " + lon +
+            '<br><a target="_blank" href="https://www.google.com/maps?q='
+            + lat + ',' + lon + '">Open in Google Maps</a>';
+        },
+        function(error) {
+          status.innerText = "Location nahi mili. Browser permission allow karo.";
+        },
+        {enableHighAccuracy: true, timeout: 15000}
+      );
+    }
+  </script>
+</div>
+""", height=150)
 uploaded_file = st.file_uploader(
     "Upload a road image",
     type=["jpg", "jpeg", "png"]
