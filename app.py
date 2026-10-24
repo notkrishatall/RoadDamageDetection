@@ -28,7 +28,8 @@ def load_model():
         trust_repo=True
     )
 st.subheader("📍 Road Location")
-
+latitude = st.number_input("Latitude", format="%.6f", value=0.0)
+longitude = st.number_input("Longitude", format="%.6f", value=0.0)
 components.html("""
 <div>
   <button onclick="getLocation()">Get My Live Location</button>
@@ -97,7 +98,8 @@ if uploaded_file and "detections" in locals():
         report = detections.copy()
         report["date_time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         report["image_name"] = uploaded_file.name
-
+report["latitude"] = latitude if latitude != 0 else None
+report["longitude"] = longitude if longitude != 0 else None
         csv_data = report.to_csv(index=False).encode("utf-8")
 
         st.download_button(
