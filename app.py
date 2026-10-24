@@ -14,13 +14,15 @@ st.title("🛣️ AI-Based Road Damage Detection")
 st.write("Upload a road image to detect road damage using our trained YOLOv5 model.")
 
 MODEL_PATH = "best (2).pt"
+
 @st.cache_resource
 def load_model():
     return torch.hub.load(
-        "/content/yolov5",
+        "ultralytics/yolov5",
         "custom",
         path=MODEL_PATH,
-        source="local"
+        force_reload=False,
+        trust_repo=True
     )
 
 uploaded_file = st.file_uploader(
