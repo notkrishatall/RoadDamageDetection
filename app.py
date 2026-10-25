@@ -44,8 +44,8 @@ else:
     st.info("Allow browser location permission to capture your location.")
 image_source = st.radio(
     "Choose how to provide the road image:",
-    ["📸 Take a Photo", " Upload an Image"],
-    horizontal=True
+    ["📸 Take a Photo", "📁 Upload an Image"],
+    index=1
 )
 
 if image_source == "📸 Take a Photo":
@@ -104,6 +104,14 @@ if uploaded_file:
                                 {json.dumps(voice_text)}
                             );
                             msg.lang = "en-US";
+                            const voices = window.speechSynthesis.getVoices();
+                            const femaleVoice = voices.find(voice =>
+                            /female|zira|samantha|karen|susan/i.test(voice.name)
+                            );
+
+                           if (femaleVoice) {
+                           msg.voice = femaleVoice;
+                           }
                             window.speechSynthesis.cancel();
                             window.speechSynthesis.speak(msg);
                         }}
