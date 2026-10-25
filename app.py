@@ -28,38 +28,20 @@ def load_model():
         trust_repo=True
     )
 st.subheader("📍 Road Location")
-latitude = st.number_input("Latitude", format="%.6f", value=0.0)
-longitude = st.number_input("Longitude", format="%.6f", value=0.0)
-components.html("""
-<div>
-  <button onclick="getLocation()">Get My Live Location</button>
-  <p id="status">“Click the button to get your location.”.</p>
-  <script>
-    function getLocation() {
-      const status = document.getElementById("status");
-      if (!navigator.geolocation) {
-        status.innerText = "Browser location support nahi karta.";
-        return;
-      }
-      status.innerText = "Location permission ka wait ho raha hai...";
-      navigator.geolocation.getCurrentPosition(
-        function(position) {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-          status.innerHTML =
-            "Latitude: " + lat + "<br>Longitude: " + lon +
-            '<br><a target="_blank" href="https://www.google.com/maps?q='
-            + lat + ',' + lon + '">Open in Google Maps</a>';
-        },
-        function(error) {
-          status.innerText = "Location nahi mili. Browser permission allow karo.";
-        },
-        {enableHighAccuracy: true, timeout: 15000}
-      );
-    }
-  </script>
-</div>
-""", height=150)
+
+location = streamlit_geolocation()
+
+latitude = location.get("latitude") if location else None
+longitude = location.get("longitude") if location else None
+
+if latitude is not None and longitude is not None:
+    st.success(f"Location captured: {latitude}, {longitude}")
+    st.markdown(
+        f"[📍 Open location in Google Maps]"
+        f"(https://www.google.com/maps?q={latitude},{longitude})"
+    )
+else:
+    st.info("Allow browser location permission to capture your location.")
 uploaded_file = st.file_uploader(
     "Upload a road image",
     type=["jpg", "jpeg", "png"]
