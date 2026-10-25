@@ -104,21 +104,7 @@ if uploaded_file:
                                 {json.dumps(voice_text)}
                             );
                             msg.lang = "en-US";
-                            const voices = window.speechSynthesis.getVoices();
-                            const femaleVoice = voices.find(voice =>
-                            /female|zira|samantha|karen|susan/i.test(voice.name)
-                            );
 
-                           if (femaleVoice) {
-                           msg.voice = femaleVoice;
-                           }
-                            window.speechSynthesis.cancel();
-                            window.speechSynthesis.speak(msg);
-                        }}
-                        </script>
-                        """,
-                        height=60
-                    )
 
                     if latitude is not None and longitude is not None:
                         st.markdown(
