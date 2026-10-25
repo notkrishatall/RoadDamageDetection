@@ -73,12 +73,19 @@ if uploaded_file:
 
                 detections = results.pandas().xyxy[0]
                 st.write("**Detected objects:**", len(detections))
-
                 if len(detections):
                     st.dataframe(
                         detections[["name", "confidence", "xmin", "ymin", "xmax", "ymax"]],
                         use_container_width=True
                     )
+                    st.subheader("📊 Damage Summary")
+                    st.write("D20:", int((detections["name"] == "D20").sum()))
+                    st.write("D40:", int((detections["name"] == "D40").sum()))
+
+                    if latitude is not None and longitude is not None:
+                        st.markdown(
+                            f"[📍 Open Google Maps](https://www.google.com/maps?q={latitude},{longitude})"
+                        )
                 else:
                     st.info("No damage detected above the confidence threshold.")
 # Save Detection Report
