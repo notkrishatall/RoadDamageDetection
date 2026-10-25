@@ -81,6 +81,36 @@ if uploaded_file:
                     st.subheader("📊 Damage Summary")
                     st.write("D20:", int((detections["name"] == "D20").sum()))
                     st.write("D40:", int((detections["name"] == "D40").sum()))
+                    d20_count = int((detections["name"] == "D20").sum())
+                    d40_count = int((detections["name"] == "D40").sum())
+
+                    voice_text = (
+                        f"Road damage detection complete. "
+                        f"Total {len(detections)} damaged areas detected. "
+                        f"{d20_count} D20 damages and "
+                        f"{d40_count} D40 damages detected."
+                    )
+
+                    import json
+                    st.components.v1.html(
+                        f"""
+                        <button onclick='speakResult()'
+                        style="padding:10px 16px;font-size:16px;cursor:pointer;">
+                        🔊 Speak Results
+                        </button>
+                        <script>
+                        function speakResult() {{
+                            const msg = new SpeechSynthesisUtterance(
+                                {json.dumps(voice_text)}
+                            );
+                            msg.lang = "en-US";
+                            window.speechSynthesis.cancel();
+                            window.speechSynthesis.speak(msg);
+                        }}
+                        </script>
+                        """,
+                        height=60
+                    )
 
                     if latitude is not None and longitude is not None:
                         st.markdown(
