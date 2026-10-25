@@ -121,7 +121,7 @@ if uploaded_file is not None:
 )
 
 # Read GPS from the original image before RGB conversion
-photo_latitude, photo_longitude = get_image_gps(original_image)
+photo_latitude, photo_longitude = None, None
 
 # Convert image for YOLOv5 detection
 image = original_image.convert("RGB")
