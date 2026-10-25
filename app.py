@@ -6,6 +6,7 @@ import io
 import pandas as pd
 from datetime import datetime
 import streamlit.components.v1 as components
+from streamlit_geolocation import streamlit_geolocation
 
 st.set_page_config(
     page_title="Road Damage Detection",
