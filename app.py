@@ -42,10 +42,19 @@ if latitude is not None and longitude is not None:
     )
 else:
     st.info("Allow browser location permission to capture your location.")
-uploaded_file = st.file_uploader(
-    "Upload a road image",
-    type=["jpg", "jpeg", "png"]
+image_source = st.radio(
+    "Choose how to provide the road image:",
+    ["📸 Take a Photo", " Upload an Image"],
+    horizontal=True
 )
+
+if image_source == "📸 Take a Photo":
+    uploaded_file = st.camera_input("Take a road photo")
+else:
+    uploaded_file = st.file_uploader(
+        "Upload a road image",
+        type=["jpg", "jpeg", "png"]
+    )
 
 if uploaded_file:
     image = Image.open(io.BytesIO(uploaded_file.getvalue())).convert("RGB")
