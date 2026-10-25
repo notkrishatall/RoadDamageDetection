@@ -8,6 +8,8 @@ import json
 from datetime import datetime
 import streamlit.components.v1 as components
 from streamlit_geolocation import streamlit_geolocation
+from PIL import Image
+from PIL.ExifTags import TAGS, GPSTAGS
 
 # ---------------- PAGE SETTINGS ----------------
 st.set_page_config(
@@ -23,6 +25,44 @@ st.write(
 )
 
 MODEL_PATH = "best (4).pt"
+def get_image_gps(image):
+    try:
+        exif = image.getexif()
+        gps_info = None
+
+        for tag_id, value in exif.items():
+            if TAGS.get(tag_id) == "GPSInfo":
+                gps_info = value
+                break
+
+        if not gps_info:
+            return None, None
+
+        gps = {
+            GPSTAGS.get(key, key): value
+            for key, value in gps_info.items()
+        }
+
+        def to_degrees(value):
+            return (
+                float(value[0])
+                + float(value[1]) / 60
+                + float(value[2]) / 3600
+            )
+
+        lat = to_degrees(gps["GPSLatitude"])
+        lon = to_degrees(gps["GPSLongitude"])
+
+        if gps.get("GPSLatitudeRef") == "S":
+            lat = -lat
+
+        if gps.get("GPSLongitudeRef") == "W":
+            lon = -lon
+
+        return lat, lon
+
+    except (KeyError, TypeError, ValueError, ZeroDivisionError):
+        return None, None
 
 
 # ---------------- LOAD MODEL ----------------
@@ -76,9 +116,29 @@ else:
 # ---------------- DETECTION ----------------
 if uploaded_file is not None:
 
-    image = Image.open(
-        io.BytesIO(uploaded_file.getvalue())
-    ).convert("RGB")
+    original_image = Image.open(
+    io.BytesIO(uploaded_file.getvalue())
+)
+
+# Read GPS from the original image before RGB conversion
+photo_latitude, photo_longitude = get_image_gps(original_image)
+
+# Convert image for YOLOv5 detection
+image = original_image.convert("RGB")
+
+if photo_latitude is not None and photo_longitude is not None:
+    st.success(
+        f"📍 Photo GPS: {photo_latitude:.6f}, {photo_longitude:.6f}"
+    )
+    st.markdown(
+        f"[Open photo location in Google Maps]"
+        f"(https://www.google.com/maps?q={photo_latitude},{photo_longitude})"
+    )
+else:
+    st.info(
+        "No GPS metadata found in this photo. "
+        "The current device location will be used if available."
+    )
 
     st.image(
         image,
