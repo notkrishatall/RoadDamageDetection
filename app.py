@@ -16,8 +16,7 @@ st.set_page_config(
 st.title("🛣️ AI-Based Road Damage Detection")
 st.write("Upload a road image to detect road damage using our trained YOLOv5 model.")
 
-MODEL_PATH = "best (2).pt"
-
+MODEL_PATH = "best (4).pt"
 @st.cache_resource
 def load_model():
     return torch.hub.load(
