@@ -10,3 +10,4 @@ seaborn
 numpy
 ultralytics
 opencv-python-headless
+streamlit-geolocation
